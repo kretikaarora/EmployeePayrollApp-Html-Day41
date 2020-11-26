@@ -144,25 +144,6 @@ const createNewEmployeeId = () => {
     return empID;
 }
 
-const createAndUpdateStorage = () => {
-    let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
-    if(employeePayrollList){
-        let empPayrollData = employeePayrollList.
-                             find(empData => empData._id == employeePayrollObj._id);
-        if (!empPayrollData) {
-            employeePayrollList.push(createEmployeePayrollData());
-        } else {
-            const index = employeePayrollList
-                          .map(empData => empData._id)
-                          .indexOf(empPayrollData._id);
-            employeePayrollList.splice(index, 1, createEmployeePayrollData(empPayrollData._id));
-        }
-    } else{
-        employeePayrollList = [createEmployeePayrollData()]
-    }
-    localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList))
-}
-
 /*//not being used after uc2 in day 41
  const createEmployeePayroll =()=>{
     let employeePayrollData = new EmployeePayRoll();
