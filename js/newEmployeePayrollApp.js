@@ -144,7 +144,7 @@ const createNewEmployeeId = () => {
     return empID;
 }
 
-/*//not being used after uc2 in day 41
+//not being used after uc2 in day 41
  const createEmployeePayroll =()=>{
     let employeePayrollData = new EmployeePayRoll();
      try{
@@ -174,7 +174,7 @@ const createNewEmployeeId = () => {
         }
         alert(employeePayrollData.toString());
     return employeePayrollData;
-};*/
+};
 
 //function called by createemployeepayroll to get multiple values
 const getSelectedValues = (propertyValue) =>
