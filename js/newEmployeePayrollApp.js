@@ -97,7 +97,6 @@ const setEmployeePayrollObject = () => {
                getInputValueById('#year') ;
     employeePayrollObj._startDate = date;
 }
-
 //we are updating the createandUpdateStorage
 //earlier we were only cheacking is employeepayrolldata exists then add it to home page table
 //now if we want to update we need to check if it exists and whether we are adding a new id or updating the existing one
@@ -145,9 +144,26 @@ const createNewEmployeeId = () => {
     return empID;
 }
 
+const createAndUpdateStorage = () => {
+    let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
+    if(employeePayrollList){
+        let empPayrollData = employeePayrollList.
+                             find(empData => empData._id == employeePayrollObj._id);
+        if (!empPayrollData) {
+            employeePayrollList.push(createEmployeePayrollData());
+        } else {
+            const index = employeePayrollList
+                          .map(empData => empData._id)
+                          .indexOf(empPayrollData._id);
+            employeePayrollList.splice(index, 1, createEmployeePayrollData(empPayrollData._id));
+        }
+    } else{
+        employeePayrollList = [createEmployeePayrollData()]
+    }
+    localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList))
+}
 
-
-//not being used after uc2 in day 41
+/*//not being used after uc2 in day 41
  const createEmployeePayroll =()=>{
     let employeePayrollData = new EmployeePayRoll();
      try{
@@ -177,7 +193,7 @@ const createNewEmployeeId = () => {
         }
         alert(employeePayrollData.toString());
     return employeePayrollData;
-};
+};*/
 
 //function called by createemployeepayroll to get multiple values
 const getSelectedValues = (propertyValue) =>
