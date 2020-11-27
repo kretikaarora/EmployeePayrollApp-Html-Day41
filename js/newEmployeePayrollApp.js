@@ -4,8 +4,6 @@ let isUpdate=false;
 let employeePayrollObj={};
 //event listener basically waits for an event to occour
 window.addEventListener('DOMContentLoaded', (event) => {
-    //we are checking for update as soon as the page loads
-    checkForUpdate();
     //uc2- validating name
     var name = document.querySelector('#name');
     var textError = document.querySelector('.text-error');
@@ -72,11 +70,6 @@ const save = (event)=>{
         event.stopPropagation();
         setEmployeePayrollObject(); 
         createAndUpdateStorage();
-        /*//storing the value returned by the function
-        let employeePayrollData=createEmployeePayroll(); 
-        //calling function to store the employee data in it if is extracted in the above line properly
-        createAndUpdateStorage(employeePayrollData);*/
-        resetForm();
         //after resetting, moving back to home page.
         window.location.replace(site_properties.home_page);
     }
@@ -87,6 +80,7 @@ const save = (event)=>{
 };
 
 const setEmployeePayrollObject = () => {
+    // if(!isUpdate) employeePayrollObj = new EmployeePayRoll();
     employeePayrollObj._name = getInputValueById('#name');
     employeePayrollObj._profilePic = getSelectedValues('[name=profile]').pop();
     employeePayrollObj._gender = getSelectedValues('[name=gender]').pop();
@@ -108,14 +102,14 @@ function createAndUpdateStorage()
     {
         let empPayrollData= employeePayrollList.find(empData=>empData._id==employeePayrollObj._id)
         //if data does not existfor a particular id directly push the data into list with a new id
-        if(!empPayrollData)
+        if(!isUpdate)
         {
             employeePayrollList.push(createEmployeePayrollData());
         }
         else
         {
             //if that id exists find index for that and splice it 
-            //first delete data on that index and then add that updated data
+            //first delete data on that index and then add that updated data            
             const index= employeePayrollList.map(empData=>empData._id).indexOf(empPayrollData._id);
             employeePayrollList.splice(index,1,createEmployeePayrollData(empPayrollData._id));
         }
@@ -127,15 +121,15 @@ function createAndUpdateStorage()
     }
     localStorage.setItem("EmployeePayrollList",JSON.stringify(employeePayrollList));   
 }
+
 const createEmployeePayrollData = (id) => {
     //creating an instance of EmployeePayroll class
-    let employeePayrollData = new EmployeePayRoll();
+    // let employeePayrollData = new EmployeePayRoll();
     //if id does not exist create new emp id
-    if (!id) employeePayrollData.id = createNewEmployeeId();
+    if (!id) employeePayrollObj._id = createNewEmployeeId();
     //else add in that id only
-    else employeePayrollData.id = id;
-    setEmployeePayrollData(employeePayrollData);
-    return employeePayrollData;
+    else employeePayrollObj._id = id;
+    return employeePayrollObj;
 }
 const createNewEmployeeId = () => {
     let empID = localStorage.getItem("EmployeeID");
@@ -206,27 +200,6 @@ const getInputElementValue = (id) =>
         let value = document.getElementById(id).value;
         return value; 
     }    
-
-//uc4 storing in local storage  
-//not being used after day41 uc2  
-/*function createAndUpdateStorage(employeePayrollData){
-    //we have an inbuilt function of local storage
-    //localstorage.getitem() is getting all item from list
-    //json will convert this json string into an object
-    let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
-    //if this list is not undefined then it will push the data into it 
-    //otherwise it make a new list and put the first entry in this list 
-    //next time when this list is used it will go  with the if statement 
-    if(employeePayrollList != undefined){
-        employeePayrollList.push(employeePayrollData);
-    }else{
-        employeePayrollList = [employeePayrollData];
-    }
-    //alert is used for poping up
-    alert(employeePayrollList.toString());
-    //converting object back to json string format
-    localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
-} */
 
 //uc5 reset button which is being called by the form 
 //we are either setting or unsetting the values to empty or some specific value
@@ -322,3 +295,4 @@ const setSelectedValues = (propertyValue, value) => {
             item.checked = true;
     });    
 }
+
