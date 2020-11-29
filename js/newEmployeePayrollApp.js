@@ -1,6 +1,11 @@
-
+//isupdate is set as false in order to check whether update is done or not 
+let isUpdate=false;
+//this is a global json object which will be used to update the changes in the local storage
+let employeePayrollObj={};
 //event listener basically waits for an event to occour
 window.addEventListener('DOMContentLoaded', (event) => {
+    //we are checking for update as soon as the page loads
+    checkForUpdate();
     //uc2- validating name
     var name = document.querySelector('#name');
     var textError = document.querySelector('.text-error');
@@ -53,6 +58,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             dateError.textContent = e;
         }
     }
+      //we are checking for update 
+      checkForUpdate();
 });
 
 // uc3 - defining the save method for saving all emp details
@@ -187,4 +194,89 @@ const setValue = (id, value) =>
 {
     const element = document.querySelector(id);
     element.value = value; 
+}
+
+const checkForUpdate=()=>{
+    //json object is created at the top of the page
+    //we are getting the values stored in the local storage using editEmp which is the key
+    //it will give us the data of that contact which we user wants to edit using editEmp key
+    const employeePayrollJson= localStorage.getItem('editEmp');
+    //if there is something in jsonobj then true else false
+    isUpdate= employeePayrollJson?true:false;
+    //if is update is false return
+    if(!isUpdate) return;
+    //now we are converting this employeepayrolljson into jsonobj to store into a global variable
+    employeePayrollObj= JSON.parse(employeePayrollJson);
+    setForm();
+}
+//setting the function in the form
+/*const setForm = () => {
+    //using the details in the json object we are setting the form fields
+    //calling the set value func
+    setValue('#name', employeePayrollObj._name);
+    //calling the selected value sfunction to set values
+    setSelectedValues('[name=profile]', employeePayrollObj._profilePic);
+    setSelectedValues('[name=gender]', employeePayrollObj._gender);
+    setSelectedValues('[name=department]', employeePayrollObj._department);
+    setValue('#salary',employeePayrollObj._salary);
+    setTextValue('.salary-output', employeePayrollObj._salary);
+    setValue('#notes',employeePayrollObj._note);
+    // we are converting date to 12 Nov 2018 format then splitting and storing in the form of an array
+    let date = stringifyDate(employeePayrollObj._startDate).split(" ");
+    setValue('#day', date[0]);
+    setValue('#month',date[1]);
+    setValue('#year',date[2]);
+}
+
+//set selected values is called when we have multiple options and want to tick one or more
+//like for gender, department,profilepic
+//here property is suppose profilepic and value is the option ticked for that
+const setSelectedValues = (propertyValue, value) => {
+    //getting all the items in allitems
+    let allItems = document.querySelectorAll(propertyValue);
+    //iterating through allitems
+    allItems.forEach(item => {
+        //then checking if values is an array or not 
+        //for example for deparment it will be an array and gender it will be a single value
+        if(Array.isArray(value)) {
+            //if it is an array
+            //checking if value includes item.value then it is ticked
+            //it will check all the options
+            if (value.includes(item.value)) {
+                item.checked = true;
+            }
+        }
+        //if it is not an array 
+        //when item value matches with value
+        //it is checked true or ticked
+        else if (item.value === value)
+            item.checked = true;
+    }); 
+}*/
+
+const setForm = () => {
+    setValue('#name', employeePayrollObj._name);
+    setSelectedValues('[name=profile]', employeePayrollObj._profilePic);
+    setSelectedValues('[name=gender]', employeePayrollObj._gender);
+    setSelectedValues('[name=department]', employeePayrollObj._department);
+    setValue('#salary',employeePayrollObj._salary);
+    setTextValue('.salary-output', employeePayrollObj._salary);
+    setValue('#notes',employeePayrollObj._note);
+    let date = stringifyDate(employeePayrollObj._startDate).split(" ");
+    setValue('#day', date[0]);
+    setValue('#month',date[1]);
+    setValue('#year',date[2]);
+}
+
+const setSelectedValues = (propertyValue, value) => {
+    let allItems = document.querySelectorAll(propertyValue);
+    allItems.forEach(item => {
+        if(Array.isArray(value)) {
+            if (value.includes(item.value)) {
+                item.checked = true;
+            }
+        }
+        else if (item.value === value)
+            item.checked = true;
+    });    
 }
